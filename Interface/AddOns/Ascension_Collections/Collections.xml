@@ -1,0 +1,77 @@
+<!--
+GUIDE: What is this file?
+Purpose: Addon/UI source file.
+
+How to read this file (no programming experience needed):
+- This XML describes the *layout* of the UI: frames, buttons, text, and how they are arranged.
+- The *behavior* (what happens when you click or when the game updates) is in the linked.lua files.
+- Indentation shows what is inside what (children inside parents).
+-->
+
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+https://raw.githubusercontent.com/Ascension-Addons/UI.xsd/main/UI.xsd">
+    <!--
+     NOTE:
+    - This line loads the Lua file 'Collections.lua' which contains the behavior (what happens on clicks/events).
+    -->
+    <Script file="Collections.lua"/>
+    
+    <CheckButton name="CollectionTabTemplate" motionScriptsWhileDisabled="true" frameStrata="DIALOG" inherits="TabSystemTabTemplate" virtual="true">
+        <Frames>
+            <Frame name="$parentIcon" parentKey="Icon" inherits="BorderIconTemplate">
+                <Size x="16" y="16"/>
+                <Anchors>
+                    <Anchor point="LEFT" x="10" y="2" />
+                </Anchors>
+            </Frame>
+        </Frames>
+
+        <Scripts>
+            <!--  NOTE: The code inside <OnLoad> is Lua that runs for this UI callback. -->
+            <OnLoad>
+                MixinAndLoadScripts(self, "CollectionsTabMixin")
+            </OnLoad>
+        </Scripts>
+
+        <ButtonText parentKey="Text">
+            <Size x="0" y="32"/>
+            <Anchors>
+                <Anchor point="CENTER" x="5" y="2"/>
+            </Anchors>
+        </ButtonText>
+        
+        <PushedTextOffset x="0" y="-1"/>
+    </CheckButton>
+    
+    <!--
+     NOTE:
+    - This creates a UI 'Frame' element named 'Collections'.
+    - It is attached to parent 'UIParent' (so it moves with it and is part of that window).
+    - Starts hidden until Lua shows it.
+    -->
+    <Frame name="Collections" parent="UIParent" frameStrata="DIALOG" enableMouse="true" clampedToScreen="true" movable="true" hidden="true">
+        <Size x="784" y="512"/>
+
+        <Anchors>
+            <Anchor point="CENTER" y="30"/>
+        </Anchors>
+
+        <Backdrop bgFile="Interface\AddOns\AwAddons\Collections\StoreCollection">
+            <BackgroundInsets left="-120" right="-120" top="-256" bottom="-256"/>
+        </Backdrop>
+
+        <Scripts>
+            <!--  NOTE: The code inside <OnLoad> is Lua that runs for this UI callback. -->
+            <OnLoad>
+                MixinAndLoadScripts(self, "CollectionsMixin")
+            </OnLoad>
+            <OnEvent function="OnEventToMethod"/>
+            <OnMouseDown>
+                CloseDropDownMenus()
+                if ForcedPrimaryStatFrame and ForcedPrimaryStatFrame:IsVisible() then
+                    ForcedPrimaryStatFrame:OnPrimaryStatSelected()
+                end
+            </OnMouseDown>
+        </Scripts>
+    </Frame>
+</Ui>
