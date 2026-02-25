@@ -1,4 +1,4 @@
-# CA_Pratical_Usage.md (CharacterAdvancement.zip)
+# CA_Pratical_Usage.md
 
 This cheat-sheet is derived from the **`CharacterAdvancement`**.  
 It focuses on console commands that give **developer-usable, concrete output** for the UI pack:
