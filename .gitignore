@@ -1,0 +1,62 @@
+###############################
+# World of Warcraft Addons
+###############################
+
+# Game-generated folders
+WTF/
+Cache/
+Errors/
+Logs/
+
+# SavedVariables (never commit these)
+*.wtf
+SavedVariables/
+Account*/SavedVariables/
+*/SavedVariables/
+
+###############################
+# Build / Packaging Artifacts
+###############################
+
+*.zip
+*.7z
+*.rar
+*.bak
+*.tmp
+*.log
+
+###############################
+# VS Code
+###############################
+
+.vscode/
+*.code-workspace
+
+###############################
+# OS Junk
+###############################
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+###############################
+# Lua tooling
+###############################
+
+luac.out
+*.luac
+
+###############################
+# Misc
+###############################
+
+*.swp
+*.swo
+*.orig
