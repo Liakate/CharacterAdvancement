@@ -3,6 +3,15 @@
 This bundle contains the **exact Lua/XML/TOC files** involved in opening the in-game **Collections → Character Advancement** UI on Bronzebeard,
 as captured in the provided `interface.zip` proof pack.
 
+## Table of contents
+- [What loads when you open the frame](#what-loads-when-you-open-the-frame)
+  - [Always (Collections shell)](#always-collections-shell)
+  - [Normal classes (Character Advancement UI)](#normal-classes-character-advancement-ui)
+  - [Season 9 variant (if your client uses it)](#season-9-variant-if-your-client-uses-it)
+  - [Custom Class characters (CoA Talents replacement frame)](#custom-class-characters-coa-talents-replacement-frame)
+  - [Shared utility used by the above UIs](#shared-utility-used-by-the-above-uis)
+- [Note about textures](#note-about-textures)
+
 ## What loads when you open the frame
 
 ### Always (Collections shell)
@@ -37,6 +46,9 @@ The XML/Lua references many texture paths (e.g. `Interface\\...`).
 Those textures typically live inside the game’s MPQ/CASC data, not as loose files in this proof pack, so they are not included here.
 
 ## Included files in this ZIP
+
+<details>
+<summary>Show full file list</summary>
 
 - `Interface/AddOns/Ascension_CharacterAdvancement/Ascension_CharacterAdvancement.toc`
 - `Interface/AddOns/Ascension_CharacterAdvancement/Browser/CharacterAdvancementBrowser.lua`
@@ -82,3 +94,5 @@ Those textures typically live inside the game’s MPQ/CASC data, not as loose fi
 - `Interface/AddOns/Ascension_TalentUI/TalentTreeBase.lua`
 - `Interface/FrameXML/Util/CharacterAdvancementCostUtil.lua`
 - `Interface/FrameXML/Util/CharacterAdvancementUtil.lua`
+
+</details>

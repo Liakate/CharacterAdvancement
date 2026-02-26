@@ -1,23 +1,43 @@
-# CA_Pratical_Usage.md
+# Character Advancement — Practical Usage
 
-This cheat-sheet is derived from the **`CharacterAdvancement`**.  
-It focuses on console commands that give **developer-usable, concrete output** for the UI pack:
+A developer-focused cheat sheet for the **CharacterAdvancement** UI pack.
 
-**AddOns in the zip (all `LoadOnDemand`)**
-- `Ascension_Collections`
-- `Ascension_CharacterAdvancement`
-- `Ascension_CharacterAdvancementSeason9`
-- `Ascension_TalentUI`
-- `Ascension_CoATalents`
+- Commands are written for the in-game chat box using `/run` (Lua).
+- Most snippets are **one-liners**.
+- If a code block has multiple lines, run them **line by line**.
 
-> Tip: most `/run` commands are **one-liners**. If a code block shows multiple lines, run them **line by line**.
+> Tip: If an API/table prints `nil`, it often means the relevant LoadOnDemand AddOn is not loaded yet.
 
+## Included AddOns (all LoadOnDemand)
+
+| AddOn | Purpose |
+|---|---|
+| `Ascension_Collections` | Collections shell + tabs |
+| `Ascension_CharacterAdvancement` | Character Advancement UI (normal classes) |
+| `Ascension_CharacterAdvancementSeason9` | Season 9 variant (if present) |
+| `Ascension_TalentUI` | Shared dependency |
+| `Ascension_CoATalents` | CoA (Custom Class) replacement frame |
+
+## Table of contents
+- [0) Load the pack (required for most commands)](#0-load-the-pack-required-for-most-commands)
+- [1) Verify the UI objects from this zip exist](#1-verify-the-ui-objects-from-this-zip-exist)
+- [2) Realm / server / mode signals (useful context for bug reports)](#2-realm-server-mode-signals-useful-context-for-bug-reports)
+- [3) Character Advancement “state snapshot” (pending build, spec, points)](#3-character-advancement-state-snapshot-pending-build-spec-points)
+- [4) Practical SpellID / TalentID outputs (safe, “first N” lists)](#4-practical-spellid-talentid-outputs-safe-first-n-lists)
+- [5) Class-scoped lists (what CA says is available for your class context)](#5-class-scoped-lists-what-ca-says-is-available-for-your-class-context)
+- [6) Masteries + implicit traits (explicitly surfaced in this UI)](#6-masteries-implicit-traits-explicitly-surfaced-in-this-ui)
+- [7) Categories + spell tags (deep browser/filter debugging)](#7-categories-spell-tags-deep-browserfilter-debugging)
+- [8) Costs & resets (from `CharacterAdvancementCostUtil.lua` in the zip)](#8-costs-resets-from-characteradvancementcostutillua-in-the-zip)
+- [9) Mystic Enchant list (Collections tab wiring is in this zip)](#9-mystic-enchant-list-collections-tab-wiring-is-in-this-zip)
+- [10) Vanity / Wardrobe discovery (Collections references these panels)](#10-vanity-wardrobe-discovery-collections-references-these-panels)
+- [11) Event tracer (what fires while you click things)](#11-event-tracer-what-fires-while-you-click-things)
+- [12) Quick performance snapshots for these addons](#12-quick-performance-snapshots-for-these-addons)
 ---
 
 ## 0) Load the pack (required for most commands)
 
 ### Load all addons from the zip
-```txt
+```lua
 /run for _,a in ipairs({"Ascension_Collections","Ascension_TalentUI","Ascension_CoATalents","Ascension_CharacterAdvancement","Ascension_CharacterAdvancementSeason9"})do local ok,why=LoadAddOn(a);print(a,ok,why)end
 ```
 
@@ -25,7 +45,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** confirming the client sees the addon folders and dependencies are satisfied.
 
 ### Confirm loaded state + TOC metadata
-```txt
+```lua
 /run for _,a in ipairs({"Ascension_Collections","Ascension_CharacterAdvancement","Ascension_CharacterAdvancementSeason9","Ascension_TalentUI","Ascension_CoATalents"})do print(a,"loaded",IsAddOnLoaded(a),"ver",GetAddOnMetadata(a,"Version"),"iface",GetAddOnMetadata(a,"Interface"))end
 ```
 
@@ -37,7 +57,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 ## 1) Verify the UI objects from this zip exist
 
 ### Collections root frame + CA frames
-```txt
+```lua
 /run print("Collections",Collections and "OK" or "nil","CharacterAdvancement",CharacterAdvancement and "OK" or "nil","CoATalentFrame",CoATalentFrame and "OK" or "nil")
 ```
 
@@ -45,7 +65,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** verifying XML actually created the expected globals (helps diagnose “nothing shows”).
 
 ### Dump Collections tab IDs created by `Ascension_Collections`
-```txt
+```lua
 /run if not Collections or not Collections.Tabs then print("Collections.Tabs missing (is Collections loaded?)") else for k,v in pairs(Collections.Tabs)do print("Tab",k,v)end end
 ```
 
@@ -53,7 +73,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** driving the UI programmatically (jumping to tabs, validating gating).
 
 ### Jump to a specific Collections tab (example: Character Advancement)
-```txt
+```lua
 /run if Collections and Collections.Tabs then Collections:GoToTab(Collections.Tabs.CharacterAdvancement) end
 ```
 
@@ -65,7 +85,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 ## 2) Realm / server / mode signals (useful context for bug reports)
 
 ### Client build + interface
-```txt
+```lua
 /run local v,b,d,t=GetBuildInfo();print("build",v,"build#",b,"date",d,"toc",t,"locale",GetLocale())
 ```
 
@@ -73,7 +93,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** attaching exact client context to bug reports.
 
 ### Realm identity + Ascension realm flags (if provided by the server build)
-```txt
+```lua
 /run print("realm",GetRealmName(),"C_Realm",type(C_Realm),C_Realm and "isLive" or "");if C_Realm and C_Realm.IsLive then print("isLive",C_Realm.IsLive())end;if C_Realm and C_Realm.IsDevelopment then print("isDev",C_Realm.IsDevelopment())end
 ```
 
@@ -81,7 +101,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** explaining why URLs, availability, or feature gates differ between realms.
 
 ### Player mode gates used by Collections
-```txt
+```lua
 /run local cn,cf=UnitClass("player");print("lvl",UnitLevel("player"),cn,cf,"hero",C_Player and C_Player.IsHero and C_Player:IsHero(),"customClass",IsCustomClass())
 ```
 
@@ -89,7 +109,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** explaining why Collections shows **CoA talents** vs **Character Advancement** vs **Mystic Enchants** (the UI gates on these).
 
 ### Active gamemodes (Wildcard/Draft/etc) if `C_GameMode` exists
-```txt
+```lua
 /run if not (C_GameMode and Enum and Enum.GameMode) then print("no C_GameMode/Enum.GameMode") else for k,v in pairs(Enum.GameMode)do if type(v)=="number" then print(k,v,C_GameMode:IsGameModeActive(v))end end end
 ```
 
@@ -103,7 +123,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 > These call **`C_CharacterAdvancement` APIs that are directly used by the zip UI**.
 
 ### Pending build state + whether you can apply/clear it
-```txt
+```lua
 /run print("pending",C_CharacterAdvancement.IsPending(),"canApply",C_CharacterAdvancement.CanApplyPendingBuild(),"canClear",C_CharacterAdvancement.CanClearPendingBuild())
 ```
 
@@ -111,7 +131,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** diagnosing “Apply button disabled” or “changes not saving”.
 
 ### Pending remaining currencies (Ability Essence / Talent Essence)
-```txt
+```lua
 /run print("pendingRemaining AE",C_CharacterAdvancement.GetPendingRemainingAE(),"TE",C_CharacterAdvancement.GetPendingRemainingTE())
 ```
 
@@ -119,7 +139,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** validating budget logic and why a learn/unlearn is blocked.
 
 ### Learned totals + expected AE for your level
-```txt
+```lua
 /run local l=UnitLevel("player");print("lvl",l,"learnedAE",C_CharacterAdvancement.GetLearnedAE(),"learnedTE",C_CharacterAdvancement.GetLearnedTE(),"expectedAE",C_CharacterAdvancement.GetExpectedAE(l))
 ```
 
@@ -127,7 +147,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** catching desyncs between client display and server progression.
 
 ### Active CA spec + whether switching is allowed right now
-```txt
+```lua
 /run print("activeChrSpec",C_CharacterAdvancement.GetActiveChrSpec(),"canSwitch",C_CharacterAdvancement.CanSwitchActiveChrSpec())
 ```
 
@@ -139,7 +159,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 ## 4) Practical SpellID / TalentID outputs (safe, “first N” lists)
 
 ### Count of known CA spell entries + first 20 (EntryID + primary SpellID)
-```txt
+```lua
 /run local t=C_CharacterAdvancement.GetKnownSpellEntries();print("knownSpellEntries",#t);for i=1,math.min(#t,20)do local e=t[i];print(i,"Entry",e.ID,"Spell",e.Spells and e.Spells[1],e.Name)end
 ```
 
@@ -147,7 +167,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** quickly sanity-checking “what the server says I know” without opening the UI.
 
 ### Count of known CA talent entries + first 20
-```txt
+```lua
 /run local t=C_CharacterAdvancement.GetKnownTalentEntries();print("knownTalentEntries",#t);for i=1,math.min(#t,20)do local e=t[i];print(i,"Entry",e.ID,"Spell",e.Spells and e.Spells[1],e.Name)end
 ```
 
@@ -155,7 +175,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** building a talent database sample from live data.
 
 ### Tooltip-driven lookup: hover a spell, then run to map SpellID -> CA EntryID
-```txt
+```lua
 /run local n,_,sid=GameTooltip:GetSpell();print("tooltip",n,sid);if sid then local e=C_CharacterAdvancement.GetEntryBySpellID(sid);print("CA entry",e and e.ID,e and e.Type,e and e.RequiredLevel)end
 ```
 
@@ -163,7 +183,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 **Use it for:** answering “what CA entry is this spell?” instantly while testing.
 
 ### Unique SpellID counts across your known entries (helps detect duplicates/rank packs)
-```txt
+```lua
 /run local t=C_CharacterAdvancement.GetKnownSpellEntries();local u,n={},0;for _,e in ipairs(t)do for _,s in ipairs(e.Spells or {})do if not u[s]then u[s]=1;n=n+1 end end end;print("uniqueSpellIDs",n,"entries",#t)
 ```
 
@@ -177,7 +197,7 @@ It focuses on console commands that give **developer-usable, concrete output** f
 The zip uses `CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("player")))` to translate your class token.
 
 ### Known spells for your class (first 15)
-```txt
+```lua
 /run local c=CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("player")));local t=C_CharacterAdvancement.GetKnownSpellEntriesForClass(c,"None");print("class",c,"known",#t);for i=1,15 do local e=t[i];if e then print(e.ID,e.Spells and e.Spells[1],e.Name)end end
 ```
 
@@ -185,7 +205,7 @@ The zip uses `CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("pla
 **Use it for:** testing class-filtering logic used by the browser.
 
 ### Known talents for your class (first 15)
-```txt
+```lua
 /run local c=CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("player")));local t=C_CharacterAdvancement.GetKnownTalentEntriesForClass(c,"None");print("class",c,"knownTalents",#t);for i=1,15 do local e=t[i];if e then print(e.ID,e.Spells and e.Spells[1],e.Name)end end
 ```
 
@@ -194,12 +214,12 @@ The zip uses `CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("pla
 ## 6) Masteries + implicit traits (explicitly surfaced in this UI)
 
 ### Masteries for your class (first 15)
-```txt
+```lua
 /run local c=CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("player")));local t=C_CharacterAdvancement.GetMasteriesByClass(c,"None");print("masteries",c,#t);for i=1,15 do local e=t[i];if e then print(e.ID,e.Spells and e.Spells[1],e.Name)end end
 ```
 
 ### Implicit traits for your class (first 15)
-```txt
+```lua
 /run local c=CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("player")));local t=C_CharacterAdvancement.GetImplicitByClass(c,"None");print("traits",c,#t);for i=1,15 do local e=t[i];if e then print(e.ID,e.Spells and e.Spells[1],e.Name)end end
 ```
 
@@ -210,7 +230,7 @@ The zip uses `CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("pla
 ## 7) Categories + spell tags (deep browser/filter debugging)
 
 ### Category list + filtered counts
-```txt
+```lua
 /run local c=C_CharacterAdvancement.GetCategories();print("categories",#c);for i=1,math.min(#c,25)do local id=c[i];print("cat",id,"count",C_CharacterAdvancement.GetNumFilteredEntriesByCategory(id),"disp",C_CharacterAdvancement.GetCategoryDisplayInfo(id))end
 ```
 
@@ -218,12 +238,12 @@ The zip uses `CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("pla
 **Use it for:** diagnosing “category shows empty” and validating server-side filtering.
 
 ### Root spell tag types + display info
-```txt
+```lua
 /run local r=C_CharacterAdvancement.GetRootSpellTagTypes();print("rootTags",#r);for i=1,#r do local id=r[i];print("root",id,C_CharacterAdvancement.GetSpellTagTypeDisplayInfo(id))end
 ```
 
 ### Drill into a root tag type (edit `rt`)
-```txt
+```lua
 /run local rt=1;local t=C_CharacterAdvancement.GetSpellTagTypes(rt)or {};print("childrenOf",rt,#t);for i=1,math.min(#t,30)do local id=t[i];print(id,C_CharacterAdvancement.GetSpellTagTypeDisplayInfo(id))end
 ```
 
@@ -234,7 +254,7 @@ The zip uses `CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("pla
 ## 8) Costs & resets (from `CharacterAdvancementCostUtil.lua` in the zip)
 
 ### Reset cost snapshot (ability/talent purge)
-```txt
+```lua
 /run local c=CACostUtil:GetAbilityAndTalentResetCost();for n,i in pairs(Enum.UnlearnCost)do if type(i)=="number"and c[i]~=nil then print(n,c[i])end end
 ```
 
@@ -242,7 +262,7 @@ The zip uses `CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("pla
 **Use it for:** validating economy changes and UI cost displays.
 
 ### Per-entry unlearn cost (hover a spell first, then run)
-```txt
+```lua
 /run local _,_,sid=GameTooltip:GetSpell();local e=sid and C_CharacterAdvancement.GetEntryBySpellID(sid);if not e then print("no CA entry for tooltip") else local c=CACostUtil:GetSingleUnlearnCost(e.ID,0,0);print("Entry",e.ID,"Gold",c[Enum.UnlearnCost.Gold],"Marks",c[Enum.UnlearnCost.MarksOfAscension])end
 ```
 
@@ -257,7 +277,7 @@ The zip uses `CharacterAdvancementUtil.GetClassDBCByFile(select(2,UnitClass("pla
 The actual enchanting system APIs are provided by the client/realm.
 
 ### Basic “do I have the Mystic API?” probe
-```txt
+```lua
 /run print("C_MysticEnchant",type(C_MysticEnchant),"MysticEnchantUtil",type(MysticEnchantUtil))
 ```
 
@@ -265,7 +285,7 @@ The actual enchanting system APIs are provided by the client/realm.
 **Use it for:** quickly proving whether the feature exists in your build.
 
 ### Query and print the first 10 enchants (if the API exists)
-```txt
+```lua
 /run if not (C_MysticEnchant and C_MysticEnchant.QueryEnchants) then print("no QueryEnchants") else local r,m=C_MysticEnchant.QueryEnchants(200,1,"",{});print("rows",#r,"maxPage",m);for i=1,math.min(#r,10)do local e=r[i];print(i,e.SpellID,e.SpellName,e.Quality,e.Known)end end
 ```
 
@@ -281,7 +301,7 @@ These panels are *selected* by Collections using frame names:
 - Wardrobe: `AppearanceWardrobeFrame`
 
 ### Are the frames present (loaded) right now?
-```txt
+```lua
 /run print("StoreCollectionFrame",StoreCollectionFrame and "OK" or "nil","AppearanceWardrobeFrame",AppearanceWardrobeFrame and "OK" or "nil")
 ```
 
@@ -289,7 +309,7 @@ These panels are *selected* by Collections using frame names:
 **Use it for:** proving whether a “blank tab” is just a missing LoD load.
 
 ### Find related `C_*` namespaces at runtime (quick API surface discovery)
-```txt
+```lua
 /run for k,v in pairs(_G)do if type(k)=="string"and k:match("^C_")and (k:lower():find("vanity")or k:lower():find("wardrobe")or k:lower():find("store"))then print(k,type(v))end end
 ```
 
@@ -310,7 +330,7 @@ The CA UI in this zip registers these events (subset):
 - …and more
 
 ### Minimal CA event logger
-```txt
+```lua
 /run local f=CreateFrame("Frame");for _,e in ipairs({"CHARACTER_ADVANCEMENT_PENDING_BUILD_UPDATED","CHARACTER_ADVANCEMENT_LEARN_RESULT","CHARACTER_ADVANCEMENT_UNLEARN_RESULT","CHARACTER_ADVANCEMENT_UPDATE_ENTRIES_RESULT","SPELL_TAGS_CHANGED","SPELL_TAG_TYPES_CHANGED"})do f:RegisterEvent(e)end;f:SetScript("OnEvent",function(_,e,...)print("EVT",e,...)end);print("CA trace armed")
 ```
 
@@ -322,7 +342,7 @@ The CA UI in this zip registers these events (subset):
 ## 12) Quick performance snapshots for these addons
 
 ### Memory usage for each addon in the zip
-```txt
+```lua
 /run UpdateAddOnMemoryUsage();for _,a in ipairs({"Ascension_Collections","Ascension_CharacterAdvancement","Ascension_CharacterAdvancementSeason9","Ascension_TalentUI","Ascension_CoATalents"})do for i=1,GetNumAddOns()do local n=GetAddOnInfo(i);if n==a then print(a,math.floor(GetAddOnMemoryUsage(i)+.5),"KiB")break end end end
 ```
 
@@ -330,7 +350,7 @@ The CA UI in this zip registers these events (subset):
 **Use it for:** detecting leaks/regressions when you spam-open UI or change filters.
 
 ### Time a single CA API call (cheap “is this slow?” check)
-```txt
+```lua
 /run if not debugprofilestart then print("no debugprofilestart") else debugprofilestart();local t=C_CharacterAdvancement.GetKnownSpellEntries();print("GetKnownSpellEntries ms",debugprofilestop(),"count",#t) end
 ```
 

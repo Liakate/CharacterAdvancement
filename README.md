@@ -1,36 +1,39 @@
-[![Release](https://img.shields.io/github/v/release/Liakate/CharacterAdvancement?display_name=tag)](https://github.com/Liakate/CharacterAdvancement/releases/tag/CharacterAdvancement_0.1.0)
+[![Release](https://img.shields.io/github/v/release/Liakate/CharacterAdvancement?display_name=tag)](https://github.com/Liakate/CharacterAdvancement/releases/tag/CharacterAdvancement_0.1.0) [![Downloads](https://img.shields.io/github/downloads/Liakate/CharacterAdvancement/total.svg)](https://github.com/Liakate/CharacterAdvancement/releases)
 
-## This is not a "ready-to-install single addon zip"
+# CharacterAdvancement UI Source (Annotated)
 
-This pack contains multiple addon folders (plus some shared FrameXML utility files) so it is meant for learning/reference and not as a single one-folder release.
+> **Note:** This is **not** a “single ready-to-install addon zip”.
+> It contains **multiple AddOn folders** (plus a couple of shared FrameXML utility files) and is intended for **learning / reference**.
 
-# Annotated UI Source (-Friendly)
+## What this repo contains
 
-This package is the same set of `.lua` and `.xml` files as the original dump, but with extra **GUIDE** and **DOC** comments added.
+This package mirrors the `.lua` / `.xml` files used by Bronzebeard’s **Collections → Character Advancement** UI, with extra **GUIDE** and **DOC** comments added for readability.
 
-## What you are looking at
+### Included AddOns (all `LoadOnDemand`)
 
-- **.xml files**: describe the *layout* of the UI (frames, buttons, text, sizes, positions).
-- **.lua files**: describe the *behavior* of the UI (what happens when you click, when data changes, etc.).
+- `Ascension_Collections` — Collections shell + tab system
+- `Ascension_CharacterAdvancement` — Character Advancement UI (normal classes)
+- `Ascension_CharacterAdvancementSeason9` — Season 9 variant (if your client uses it)
+- `Ascension_TalentUI` — shared talent UI dependency
+- `Ascension_CoATalents` — CoA (Custom Class) replacement frame
 
-The game reads these files when it loads the addon(s). Comments are ignored by the game.
+### Shared FrameXML utility files
 
-## How the new comments are marked
+- `Interface/FrameXML/Util/CharacterAdvancementUtil.lua`
+- `Interface/FrameXML/Util/CharacterAdvancementCostUtil.lua`
 
-- In **Lua** (`.lua`): comments start with `--` and blocks look like:
+## How to use these files
 
-  - `--[[ GUIDE:... --]]` (file-level overview)
-  - `--[[ DOC: SomeFunctionName... --]]` (function-level explanation)
+- Use this repo as a **reference** while developing / debugging UI behavior.
+- For hands-on console commands to probe the UI and APIs, see:
+  - **CA_Pratical_Usage.md** (practical `/run` snippets)
+  - **LOADED_FILES.md** (what loads when the UI opens)
 
-- In **XML** (`.xml`): comments look like:
+## Comment markers used in the annotated sources
 
-  - `<!-- GUIDE:... -->` (file-level overview)
-  - `<!-- NOTE:... -->` (element-level explanation)
-
-## Added some practical examples
-
-- CA_Pratical_Usage.md
-
-## This is not a "ready-to-install single addon zip"
-
-This pack contains multiple addon folders (plus some shared FrameXML utility files) so it is meant for learning/reference and not as a single one-folder release.
+- **Lua (`.lua`)**
+  - `--[[ GUIDE: ... --]]` (file-level overview)
+  - `--[[ DOC: SomeFunctionName ... --]]` (function-level explanation)
+- **XML (`.xml`)**
+  - `<!-- GUIDE: ... -->` (file-level overview)
+  - `<!-- NOTE: ... -->` (element-level explanation)
