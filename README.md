@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/github/v/release/Liakate/CharacterAdvancement?display_name=tag)](https://github.com/Liakate/CharacterAdvancement/releases/tag/CharacterAdvancement_0.1.0) [![Downloads](https://img.shields.io/github/downloads/Liakate/CharacterAdvancement/total.svg)](https://github.com/Liakate/CharacterAdvancement/releases)
+[![Release](https://img.shields.io/github/v/release/Liakate/CharacterAdvancement?display_name=tag&sort=date)](https://github.com/Liakate/CharacterAdvancement/releases/latest)
 
 # CharacterAdvancement UI Source (Annotated)
 
@@ -27,6 +27,7 @@ This package mirrors the `.lua` / `.xml` files used by Bronzebeard’s **Collect
 - Use this repo as a **reference** while developing / debugging UI behavior.
 - For hands-on console commands to probe the UI and APIs, see:
   - **CA_Pratical_Usage.md** (practical `/run` snippets)
+  - **CA_Pratical_AddonUsage.md** (small addon examples that wrap the same probes)
   - **LOADED_FILES.md** (what loads when the UI opens)
 
 ## Comment markers used in the annotated sources
