@@ -11,6 +11,14 @@ This repo mirrors the `.lua` / `.xml` files used by Bronzebeard’s **Collection
 
 ## What this repo contains
 
+## Realm sharing note
+
+This client build uses the **same FrameXML + LoadOnDemand AddOns** for **multiple Ascension realms** (at least the following three), so the code in this repo is **not Bronzebeard-only**:
+
+- **Bronzebeard (Warcraft Reborn)**
+- **Area 52 (Free Pick)**
+- **Elune (Season 9)** — uses the `Ascension_CharacterAdvancementSeason9` variant
+
 ### Included AddOns (all `LoadOnDemand`)
 
 - `Ascension_Collections` — Collections shell + tab system
