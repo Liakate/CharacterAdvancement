@@ -1,3 +1,5 @@
+[![Release](https://img.shields.io/github/v/release/Liakate/CharacterAdvancement?display_name=tag)](https://github.com/Liakate/CharacterAdvancement/releases/tag/CharacterAdvancement_0.1.0)
+
 ## This is not a "ready-to-install single addon zip"
 
 This pack contains multiple addon folders (plus some shared FrameXML utility files) so it is meant for learning/reference and not as a single one-folder release.
