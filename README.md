@@ -1,5 +1,6 @@
 ![GitHub Release](https://img.shields.io/github/v/release/Liakate/CharacterAdvancement)  ![GitHub repo size](https://img.shields.io/github/repo-size/Liakate/CharacterAdvancement)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Liakate/CharacterAdvancement/total)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Liakate/CharacterAdvancement/total) ![Static Badge](https://img.shields.io/badge/100%25-ChatGPT-blue?style=flat-square&logo=ChatGPT)
+
 
 # CharacterAdvancement UI Source (Annotated)
 
