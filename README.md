@@ -1,4 +1,5 @@
-[![Release](https://img.shields.io/github/v/release/Liakate/CharacterAdvancement?display_name=tag&sort=date)](https://github.com/Liakate/CharacterAdvancement/releases/latest)
+![GitHub Release](https://img.shields.io/github/v/release/Liakate/CharacterAdvancement)  ![GitHub repo size](https://img.shields.io/github/repo-size/Liakate/CharacterAdvancement)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Liakate/CharacterAdvancement/total)
 
 # CharacterAdvancement UI Source (Annotated)
 
@@ -51,7 +52,7 @@ Interface/AddOns/Ascension_CharacterAdvancement/Ascension_CharacterAdvancement.t
 0005: ## LoadOnDemand: 1
 0006: ## Version: 1.0.0
 0007: ## Dependencies: Ascension_Collections
-0008: 
+0008:
 0009: Templates\CharacterAdvancementTemplates.xml
 0010: Browser\CharacterAdvancementBrowser.xml
 0011: CharacterAdvancement.xml
@@ -68,9 +69,9 @@ Interface/AddOns/Ascension_CoATalents/Ascension_CoATalents.toc
 0005: ## Version: 1.0.0
 0006: ## LoadOnDemand: 1
 0007: ## Dependencies: Ascension_TalentUI, Ascension_Collections
-0008: 
+0008:
 0009: CoACharacterAdvancementUtil.lua
-0010: 
+0010:
 0011: Templates\CoATalentTemplates.xml
 0012: CoATalentFrame.xml
 ```
@@ -86,7 +87,7 @@ Interface/AddOns/Ascension_Collections/Collections.lua (SetupTabSystem)
 0053: 	self:SetTabPoint("TOPLEFT", self, "BOTTOMLEFT", 12, 10)
 0054: 	self:RegisterCallback("OnTabSelected", self.OnTabSelected, self)
 0055: 	self.Tabs = {}
-0056: 	
+0056:
 0057: 	-- Character Advancement Tab
 0058: 	local tab
 0059: 	do
@@ -112,27 +113,27 @@ Interface/AddOns/Ascension_Collections/Collections.lua (OnShow + PLAYER_REGEN_DI
 0176: 		Draft:HideCards()
 0177: 	end
 0178: 	UpdateMicroButtons()
-0179: 	
+0179:
 0180: 	-- disable character advancement tab if player is a coa class and not level 10+
 0181: 	local caTab = self:GetCharacterAdvancementTab()
 0182: 	caTab:SetTabEnabled(not IsCustomClass() or C_Player:GetLevel() >= COA_AUTO_SHOW_TALENTS_LEVEL, format(FEATURE_BECOMES_AVAILABLE_AT_LEVEL, COA_AUTO_SHOW_TALENTS_LEVEL))
-0183: 	
+0183:
 0184: 	-- disable enchanting tab if player is not 60+, is not prestiged, and has not opened the ui before
 0185: 	local enchantTab = self:GetMysticEnchantTab()
 0186: 	if enchantTab then
 0187: 		enchantTab:SetTabEnabled(MysticEnchantUtil.HasUnlockedEnchantTab(), format(MYSTIC_ENCHANTING_ALTAR_UNLOCK, 60))
 0188: 	end
-0189: 
+0189:
 0190: 	-- skill card tab only shown in draft/wildcard
 0191: 	if C_GameMode:IsGameModeActive(Enum.GameMode.WildCard) or C_GameMode:IsGameModeActive(Enum.GameMode.Draft) then
 0192: 		self:ShowTabID(self.Tabs.SkillCards)
 0193: 	else
 0194: 		self:HideTabID(self.Tabs.SkillCards)
 0195: 	end
-0196: 	
+0196:
 0197: 	HelpTip:Acknowledge("WARDROBE_CHANGE_TRANSMOG_HINT")
 0198: end
-0199: 
+0199:
 0200: -- DOC: CollectionsMixin:OnHide
 0201: -- What this does: Cleans up when the UI closes (stops updates and hides extra popups).
 0202: -- When it runs: Runs when this UI element is hidden.
@@ -145,11 +146,11 @@ Interface/AddOns/Ascension_Collections/Collections.lua (OnShow + PLAYER_REGEN_DI
 0209: 	self:HideCurrentPanel()
 0210: 	UpdateMicroButtons()
 0211: end
-0212: 
+0212:
 0213: function CollectionsMixin:PLAYER_REGEN_DISABLED()
 0214: 	HideUIPanel(self)
 0215: end
-0216: 
+0216:
 ```
 
 > `CharacterAdvancement_LoadUI` is referenced, but its **definition is not present in this repo**. From these sources alone, we can only say: *Collections expects it to exist at runtime and uses it as a pre-click loader.*
@@ -166,21 +167,21 @@ Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.xml (script
 0015:     - This line loads the Lua file 'CharacterAdvancement.lua' which contains the behavior (what happens on clicks/events).
 0016:     -->
 0017:     <Script file="CharacterAdvancement.lua"/>
-0018: 
+0018:
 0019:     <Frame name="CharacterAdvancement" parent="Collections" hidden="true" inherits="RaisedPortraitFrameTemplate">
 0020:         <Size x="1165" y="758"/>
-0021: 
+0021:
 0022:         <Anchors>
 0023:             <Anchor point="BOTTOM" y="8"/>
 0024:         </Anchors>
-0025:         
+0025:
 ```
 
 The same XML file attaches the mixin and routes events to methods:
 
 ```text
 Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.xml (mixin + OnEventToMethod)
-1606:         
+1606:
 1607:         <Scripts>
 1608:             <!--  NOTE: The code inside <OnLoad> is Lua that runs for this UI callback. -->
 1609:             <OnLoad>
@@ -194,7 +195,7 @@ That “OnEventToMethod” routing is reflected directly in Lua: event handlers 
 ```text
 Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.lua (event method)
 2928: end
-2929: 
+2929:
 2930: -- DOC: CharacterAdvancementMixin:CHARACTER_ADVANCEMENT_PENDING_BUILD_UPDATED
 2931: -- What this does: Do a specific piece of work related to 'CHARACTER_ADVANCEMENT_PENDING_BUILD_UPDATED'.
 2932: -- When it runs: Called by other code when needed.
@@ -208,7 +209,7 @@ Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.lua (event 
 2940:         self.preserveFilter = false
 2941:     end
 2942:     local specFile = C_CVar.Get("caLastSpec")
-2943: 
+2943:
 2944:     if specFile == "SUMMARY" then
 2945:         self:FullUpdate()
 2946:     elseif self.Content.AbilityBrowser:IsVisible() then
@@ -231,10 +232,10 @@ Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.lua (frame 
 0105:     self.SpellPool = CreateFramePool("Button", self.Content.ScrollChild.Spells, "CASpellButtonTemplate")
 0106:     self.CompactSpellPool = CreateFramePool("Button", self.Content.ScrollChild.Spells, "CACompactSpellButtonTemplate")
 0107:     self.TalentPool = CreateFramePool("Button", self.Content.ScrollChild.Talents, "CATalentButtonTemplate")
-0108: 
+0108:
 0109:     self.SpellClassIconsPool = CreateFramePool("Button", self.Content.ScrollChild.Spells, "CASummaryClassIconTemplate")
 0110:     self.TalentClassIconsPool = CreateFramePool("Button", self.Content.ScrollChild.Talents, "CASummaryClassIconTemplate")
-0111: 
+0111:
 ```
 
 Those pool templates come from the XML template files. For example, `CATalentButtonTemplate` is a **virtual** `<Button>` template whose `<OnLoad>` attaches the `CATalentButtonMixin` via `MixinAndLoadScripts`:
@@ -242,7 +243,7 @@ Those pool templates come from the XML template files. For example, `CATalentBut
 ```text
 Interface/AddOns/Ascension_CharacterAdvancement/Templates/CharacterAdvancementTemplates.xml (CATalentButtonTemplate OnLoad)
 0936:         </Frames>
-0937: 
+0937:
 0938:         <Scripts>
 0939:             <!--  NOTE: The code inside <OnLoad> is Lua that runs for this UI callback. -->
 0940:             <OnLoad>
@@ -253,7 +254,7 @@ Interface/AddOns/Ascension_CharacterAdvancement/Templates/CharacterAdvancementTe
 0945:             </OnLoad>
 0946:         </Scripts>
 0947:     </Button>
-0948:     
+0948:
 0949:     <Button name="CAPrimaryStatButtonTemplate" motionScriptsWhileDisabled="true" virtual="true">
 0950:         <Size x="32" y="32"/>
 ```
@@ -282,41 +283,41 @@ Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.lua (SetTal
 2211:     if CA_USE_GATES_DEBUG then
 2212:         self:RefreshGateInfo(class, spec, true) -- we need to scan it before to button properly update on SetEntry
 2213:     end
-2214: 
+2214:
 2215:     local height = self.Content:GetHeight()
 2216:     local button, column, row, x, y
 2217:     for i, entry in ipairs(C_CharacterAdvancement.GetTalentsByClass(class, spec, false)) do
 2218:         button = self.TalentPool:Acquire()
-2219: 
+2219:
 2220:         if CA_USE_GATES_DEBUG then
 2221:             -- work with gates
 2222:             local gate = talentFrame:DefineGatesForButton(entry.Row+1)
-2223: 
+2223:
 2224:             talentFrame:DefineGateTopLeftNode(gate, entry, button)
 2225:             self:RefreshGateInfo(class, spec) -- TODO: needs better optimization we need to scan it before to button properly update on SetEntry
-2226: 
+2226:
 2227:             button.gate = gate
 2228:         else
 2229:             button.gate = nil
 2230:         end
-2231:         
+2231:
 2232:         button:SetEntry(entry)
 2233:         column = entry.Column - 1
 2234:         row = entry.Row
 2235:         talentFrame.FilledNodes[column] = talentFrame.FilledNodes[column] or {}
 2236:         talentFrame.FilledNodes[column][row] = true
-2237: 
-2238:         x = -58-26 + column * 52 + (talentFrame.shift or 0)-- -26 to center 4 rows under essence text 
+2237:
+2238:         x = -58-26 + column * 52 + (talentFrame.shift or 0)-- -26 to center 4 rows under essence text
 2239:         y = yStarting + row * 44
-2240: 
+2240:
 2241:         button:ClearAndSetPoint("TOP", talentFrame, "TOP", x, -y)
 2242:         button:Show()
-2243: 
+2243:
 2244:         if entry.ID == self.LocateID then
 2245:             button:ShowLocation()
 2246:             self.LocateID = nil
 2247:         end
-2248: 
+2248:
 2249:         talentFrame.NodeMap[entry.ID] = { button = button, column = column, row = row }
 ```
 
@@ -326,16 +327,16 @@ Then it traverses `entry.ConnectedNodes` to build the parent → child edge list
 Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.lua (ConnectedNodes traversal)
 2251:         -- connections are backwards
 2252:         -- the child node references the parent node
-2253:         
+2253:
 2254:         -- something else is a child of this node but couldnt find info about this parent node
 2255:         if talentFrame.ConnectedNodes[entry.ID] and not talentFrame.ConnectedNodes[entry.ID].button then
 2256:             talentFrame.ConnectedNodes[entry.ID].button = button
 2257:             talentFrame.ConnectedNodes[entry.ID].column = column
 2258:             talentFrame.ConnectedNodes[entry.ID].row = row
 2259:         end
-2260: 
+2260:
 2261:         for _, parentNodeID in pairs(entry.ConnectedNodes) do
-2262:             -- parent node doesnt already exist 
+2262:             -- parent node doesnt already exist
 2263:             if not talentFrame.ConnectedNodes[parentNodeID] then
 2264:                 if talentFrame.NodeMap[parentNodeID] then -- already discovered, connect parent.
 2265:                     talentFrame.ConnectedNodes[parentNodeID] = talentFrame.NodeMap[parentNodeID]
@@ -343,17 +344,17 @@ Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.lua (Connec
 2267:                     talentFrame.ConnectedNodes[parentNodeID] = {}
 2268:                 end
 2269:             end
-2270: 
+2270:
 2271:             local parentNode = talentFrame.ConnectedNodes[parentNodeID]
-2272: 
+2272:
 2273:             -- attach ourself as a child
 2274:             if not parentNode.targets then
 2275:                 parentNode.targets = {}
 2276:             end
-2277:             
+2277:
 2278:             tinsert(parentNode.targets, { column = column, row = row, button = button })
 2279:         end
-2280: 
+2280:
 ```
 
 Those snippets are the *proof* for which entry fields this UI expects to exist (or be nil-safe).
@@ -387,7 +388,7 @@ Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.lua (dropdo
 2567:             end
 2568:             UIDropDownMenu_AddButton(info, level)
 2569:         end
-2570: 
+2570:
 2571:         -- learn
 2572:         info = UIDropDownMenu_CreateInfo()
 2573:         info.notCheckable = true
@@ -417,7 +418,7 @@ If the user closes the UI while there are pending changes, it shows an “unsave
 
 ```text
 Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.lua (OnHide pending check)
-0432: 
+0432:
 0433:     if C_CharacterAdvancement.IsPending() then
 0434:         StaticPopup_Show("CLOSE_CHARACTER_ADVANCEMENT_UNSAVED_PENDING_CHANGES")
 0435:     end
@@ -450,11 +451,11 @@ Interface/AddOns/Ascension_CharacterAdvancement/CharacterAdvancement.lua (CanApp
 1527:         button.YellowGlowRight:Show()
 1528:         button.YellowGlowMiddle:Show()
 1529:         undoButton:Enable()
-1530: 
+1530:
 1531:         if reason and not(canApply) and traversalError then
 1532:             local reason = _G[reason] or reason .. ": %s"
 1533:             local entry = C_CharacterAdvancement.GetEntryByInternalID(entryID)
-1534: 
+1534:
 1535:             if entry then
 1536:                 reason = reason:format(entry.Name, entryRank or "", traversalError and _G[traversalError] or traversalError or "")
 1537:                 button.ErrorText:SetText(reason)
@@ -475,14 +476,14 @@ Interface/FrameXML/Util/CharacterAdvancementUtil.lua (ConfirmApplyPendingBuild)
 0520:     if marksCost > 0 then
 0521:         local markItem = Item:CreateFromID(ItemData.MARK_OF_ASCENSION)
 0522:         local markText = marksCost .. " " .. markItem:GetIconLink(22)
-0523: 
+0523:
 0524:         costString = markText
 0525:     end
-0526: 
+0526:
 0527:     if goldCost > 0 then
 0528:         costString = costString and (costString .. "\n") or "" .. GetMoneyString(goldCost)
 0529:     end
-0530: 
+0530:
 0531:     if costString then
 0532:         StaticPopup_Show("CONFIRM_APPLY_PENDING_BUILD", costString)
 0533:     else
@@ -501,37 +502,37 @@ Interface/FrameXML/Util/CharacterAdvancementUtil.lua (ConfirmApplyPendingBuild)
 
 The browser uses a category-based cache in `C_CharacterAdvancement`:
 
-1) Get category IDs (`GetCategories`)  
-2) Set filters per category (`SetFilteredEntriesByCategory`)  
-3) Ask for counts (`GetNumFilteredEntriesByCategory`)  
-4) Fetch entries by index (`GetFilteredEntryAtIndexByCategory`) which returns `(entry, isSuggested)`  
+1) Get category IDs (`GetCategories`)
+2) Set filters per category (`SetFilteredEntriesByCategory`)
+3) Ask for counts (`GetNumFilteredEntriesByCategory`)
+4) Fetch entries by index (`GetFilteredEntryAtIndexByCategory`) which returns `(entry, isSuggested)`
 
 ```text
 Interface/AddOns/Ascension_CharacterAdvancement/Browser/CharacterAdvancementBrowser.lua (DisplaySearchResults)
 0928: function CABrowserMixin:DisplaySearchResults(searchQuery, filterOutput)
 0929: 	--dprint("CABrowserMixin:DisplaySearchResults")
-0930: 	
+0930:
 0931: 	local categories = C_CharacterAdvancement.GetCategories()
-0932: 
+0932:
 0933: 	-- SPELL_CATEGORY_RECENTLY_UNLOCKED = 31;
-0934: 	
+0934:
 0935: 	local hasDisabledCategory = false
-0936: 
+0936:
 0937: 	for i = 1, #categories do
 0938: 		local categoryID = categories[i]
 0939: 		local reqLevel = C_CharacterAdvancement.GetCategoryDisplayInfo(categoryID)
-0940: 
+0940:
 0941: 		if reqLevel <= UnitLevel("player") or not(hasDisabledCategory) then
 0942: 			if not HIDDEN_CATEGORIES[categoryID] then
 0943: 				C_CharacterAdvancement.SetFilteredEntriesByCategory(categoryID, filterOutput[2], searchQuery or "", filterOutput[1])
 0944: 			end
 0945: 		end
-0946: 
+0946:
 0947: 		if reqLevel > UnitLevel("player") then
 0948: 			hasDisabledCategory = true
 0949: 		end
 0950: 	end
-0951: 
+0951:
 0952: 	self:BuildCategoryMap()
 0953: 	self:RefreshScrollFrame()
 0954: end
@@ -546,30 +547,30 @@ Interface/AddOns/Ascension_CharacterAdvancement/Browser/CharacterAdvancementBrow
 0812: 	self.categoryMap = {}
 0813: 	self.totalRows = 0
 0814: 	self.firstRecentCategoryID = nil -- "rowindex = startindex"
-0815: 
+0815:
 0816: 	local categories = C_CharacterAdvancement.GetCategories()
 0817: 	local hasDisabledCategory = false
-0818: 
+0818:
 0819: 	for i = 1, #categories do
 0820: 		local categoryID = categories[i]
-0821: 		local categoryTotalResults = C_CharacterAdvancement.GetNumFilteredEntriesByCategory(categoryID) 
+0821: 		local categoryTotalResults = C_CharacterAdvancement.GetNumFilteredEntriesByCategory(categoryID)
 0822: 		local categoryTakesRows = math.ceil(categoryTotalResults/SPELLS_PER_ROW)
 0823: 		local reqLevel = C_CharacterAdvancement.GetCategoryDisplayInfo(categoryID)
-0824: 
+0824:
 0825: 		if categoryTakesRows > 0 then
 0826: 			if hasDisabledCategory then
 0827: 				categoryTakesRows = 1 -- display just category name
 0828: 			elseif RECENTLY_UNLOCKED_CATEGORIES[categoryID] then -- for recently unlocked, display header only for 1st recently unlocked
-0829: 
+0829:
 0830: 				categoryTotalResults = categoryTotalResults + categoryTakesRows -- add 1 blank element for each row
 0831: 				local categoryTakesRowsNew = math.ceil(categoryTotalResults/SPELLS_PER_ROW)
-0832: 
+0832:
 0833: 				if categoryTakesRowsNew > categoryTakesRows then
 0834: 					categoryTotalResults = categoryTotalResults + (categoryTakesRowsNew-categoryTakesRows)
 0835: 				end
-0836: 
+0836:
 0837: 				categoryTakesRows = math.ceil(categoryTotalResults/SPELLS_PER_ROW)
-0838: 
+0838:
 0839: 				if not self.firstRecentCategoryID then
 0840: 					self.firstRecentCategoryID = categoryID
 0841: 					categoryTakesRows = categoryTakesRows + 1
@@ -584,10 +585,10 @@ Actual entry retrieval for a row uses the indexed getter that returns `entry` pl
 
 ```text
 Interface/AddOns/Ascension_CharacterAdvancement/Browser/CharacterAdvancementBrowser.lua (LoadEntry + OnUpdate icon throttling)
-0667: 
+0667:
 0668:     self:SetAvailableVisual(reqLevel <= UnitLevel("player"), name, name.." ("..string.format(CA_BROWSER_UNLOCKS_AT_LEVEL, "|cffFF0000"..reqLevel.."|r")..")|r")
 0669: end
-0670: 
+0670:
 0671: -- DOC: CABrowserRowMixin:LoadEntry
 0672: -- What this does: Show part of the UI (or switch which panel is visible).
 0673: -- When it runs: Called by other code when needed.
@@ -599,14 +600,14 @@ Interface/AddOns/Ascension_CharacterAdvancement/Browser/CharacterAdvancementBrow
 0679: -- What it changes: shows/hides UI pieces, uses Character Advancement API.
 0680: function CABrowserRowMixin:LoadEntry(button, index)
 0681: 	local entry, isSuggested = C_CharacterAdvancement.GetFilteredEntryAtIndexByCategory(self:GetCategoryID(), index)
-0682: 
+0682:
 0683: 	if entry then
 0684: 		button.Icon.Icon:Show()
 0685: 		button:SetEntry(entry, isSuggested)
 0686: 		--button:MakeClass()
 0687: 	end
 0688: end
-0689: 
+0689:
 0690: -- DOC: CABrowserRowMixin:LoadIconsOnUpdate
 0691: -- What this does: Show part of the UI (or switch which panel is visible).
 0692: -- When it runs: Called by other code when needed.
@@ -616,8 +617,8 @@ Interface/AddOns/Ascension_CharacterAdvancement/Browser/CharacterAdvancementBrow
 0696: -- What it changes: shows/hides UI pieces, uses Character Advancement API.
 0697: function CABrowserRowMixin:LoadIconsOnUpdate()
 0698: 	for i = 1, MAX_ICON_LOADS_PER_FRAME do
-0699: 		local button, index = next(self.delayedEntries) 
-0700: 
+0699: 		local button, index = next(self.delayedEntries)
+0700:
 0701: 		if button then
 0702: 			self:LoadEntry(button, index)
 0703: 			self.delayedEntries[button] = nil
@@ -648,7 +649,7 @@ Interface/FrameXML/Util/CharacterAdvancementCostUtil.lua (constants + cost formu
 0010: -- Safe edits for non-programmers:
 0011: -- - Text near the top (labels, descriptions) is usually safe to change.
 0012: -- - Avoid renaming functions unless you also update every place they are referenced.
-0013: 
+0013:
 0014: ABILITY_PURGE_MARK_OF_ASCENSION_COST = 10000
 0015: TALENT_PURGE_MARK_OF_ASCENSION_COST = 7500
 0016: UNLEARN_ABILITY_MARK_OF_ASCENSION_COST = 250
@@ -656,9 +657,9 @@ Interface/FrameXML/Util/CharacterAdvancementCostUtil.lua (constants + cost formu
 0018: TALENT_PURGE_MARK_OF_ASCENSION_COA_COST_PER_LEVEL = 125
 0019: UNLEARN_ABILITY_MARK_OF_ASCENSION_COA_COST_PER_LEVEL = 4
 0020: FREE_RESET_LEVEL = 10
-0021: 
+0021:
 0022: CACostUtil = {}
-0023: 
+0023:
 0024: -- DOC: CalculateResetCostGold
 0025: -- What this does: Do a specific piece of work related to 'CalculateResetCostGold'.
 0026: -- When it runs: Called by other code when needed.
